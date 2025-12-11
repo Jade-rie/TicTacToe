@@ -11,7 +11,7 @@ project(IMAC_project)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # On indique que l'on souhaite faire un exécutable avec nos deux fichiers .cpp
-add_executable(Projet "src/Player.cpp" "src/main.cpp")
+add_executable(Projet "src/Player.cpp" "src/draw_game.cpp" "src/move.cpp" "src/game.cpp" "src/main.cpp")
 
 # le dossier contenant les fichiers d'en-tête pour notre executable helloImac
 target_include_directories(Projet PUBLIC "src/")
