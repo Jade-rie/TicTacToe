@@ -1,6 +1,6 @@
-#include <iostream>
+//#include <iostream>
 #include <string>
-#include <array>
+//#include <array>
 #pragma once
 
 struct Player{
@@ -11,7 +11,7 @@ struct Player{
 
 
 Player create_player();
-Player mode_choice(int & choice);
-char player2_symbol(Player player1);
+Player mode_choice(int const& choice);
+char player2_symbol(Player const& player1);
 
 

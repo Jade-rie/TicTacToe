@@ -1,8 +1,8 @@
 #include <iostream>
-#include <string>
-#include <vector>
-#include <random>
-#include <time.h>
+//#include <string>
+//#include <vector>
+//#include <random>
+//#include <time.h>
 #include "Player.hpp"
 
 
@@ -22,7 +22,7 @@ Player create_player(){
 }
 
 
-Player mode_choice(int & choice){
+Player mode_choice(int const& choice){
 
     Player player2;
     if(choice==1){
@@ -38,7 +38,7 @@ Player mode_choice(int & choice){
     return player2;
 }
 
-char player2_symbol(Player player1){
+char player2_symbol(Player const& player1){
     Player player2;
      if (player1.symbol=='O')
     {

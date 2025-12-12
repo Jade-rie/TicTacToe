@@ -9,7 +9,12 @@ int main()
 {
     srand(time(0));
     int choice;
-    std::cout<<"choisis ton mode 1 ou 2 ?"<<std::endl;
+    std::cout<<"Bienvenue dans le jeu du TicTacToe"<<std::endl;
+    std::cout<<"Veuillez choisir un mode de jeu :"<<std::endl;
+    std::cout<<"1. Deux joueurs"<<std::endl;
+    std::cout<<"2. Un joueur contre l'IA"<<std::endl;
+               
+    std::cout<<std::endl;
     std::cin>>choice;
     Player player1 = create_player();
     Player player2 = mode_choice(choice);
