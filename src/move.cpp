@@ -9,9 +9,9 @@
 
 
 
-bool empty_case(std::array<std::array<char, 3>, 3>& board , int i, int j){
+bool empty_case(std::array<std::array<char, 3>, 3>& board , int i, int j, Player const& player1, Player const& player2){
     bool empty;
-    if(board[i][j]!='X' && board[i][j] !='O'){
+    if(board[i][j]!=player1.symbol && board[i][j] !=player2.symbol){
         empty=true;
     }
     else{
@@ -21,11 +21,11 @@ return empty;
 
 }
 
-std::vector <int> empty_tab( std::array<std::array<char, 3>, 3> board ){
+std::vector <int> empty_tab( std::array<std::array<char, 3>, 3> board, Player const& player1, Player const& player2){
     std::vector <int> empty{};
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            if(empty_case(board,i,j)){
+            if(empty_case(board,i,j, player1, player2)){
                 empty.push_back(i*3+j+1);
             };
     }
@@ -36,14 +36,15 @@ std::vector <int> empty_tab( std::array<std::array<char, 3>, 3> board ){
 
 
 
-void move_player(std::array<std::array<char, 3>, 3>  & board , Player const& player){
+void move_player(std::array<std::array<char, 3>, 3>  & board , Player const& player1, Player const& player2){
+    Player const& player=player1;      
 
     int case_choice{};
         std::cout<<player.name<<" tape le numéro de la case désirée"<<std::endl;
         std::cin>>case_choice;
         case_choice--;
         
-    while (!empty_case(board, (case_choice)/3, (case_choice%3)))
+    while (!empty_case(board, (case_choice)/3, (case_choice%3), player1, player2))
     {
         std::cout<<player.name<<" Case indisponible. Choisis-en une autre.  "<<std::endl;
         std::cin>>case_choice;
@@ -55,8 +56,9 @@ void move_player(std::array<std::array<char, 3>, 3>  & board , Player const& pla
     draw_game_board(board);
 }
 
-void move_IA(std::array<std::array<char, 3>, 3>  & board , Player const& player){
-    std::vector<int> tab = empty_tab(board);
+void move_IA(std::array<std::array<char, 3>, 3>  & board , Player const& player1, Player const& player2){
+    Player const& player=player1;   
+    std::vector<int> tab = empty_tab(board, player1, player2);
     int n = rand()%tab.size();
     int pos = tab[n];
     int i = (pos-1)/3;
@@ -97,7 +99,7 @@ bool move_IA_best(std::array<std::array<char, 3>, 3>& board,Player const& player
         for (int y = 0; y < 3; y++) {
             if (board[x][y] == player1.symbol)
                 count_symbol++;
-            else if (empty_case(board, x, y)) {
+            else if (empty_case(board, x, y, player1, player2)) {   
                 count_empty++;
                 empty_y = y;
             }
@@ -120,7 +122,7 @@ bool move_IA_best(std::array<std::array<char, 3>, 3>& board,Player const& player
         for (int x = 0; x < 3; x++) {
             if (board[x][y] == player1.symbol)
                 count_symbol++;
-            else if (empty_case(board, x, y)) {
+            else if (empty_case(board, x, y, player1, player2)) {
                 count_empty++;
                 empty_x = x;
             }
@@ -142,7 +144,7 @@ bool move_IA_best(std::array<std::array<char, 3>, 3>& board,Player const& player
         for (int i = 0; i < 3; i++) {
             if (board[i][i] == player1.symbol)
                 count_symbol++;
-            else if (empty_case(board, i, i)) {
+            else if (empty_case(board, i, i, player1, player2)) {
                 count_empty++;
                 empty_i = i;
             }
@@ -164,7 +166,7 @@ bool move_IA_best(std::array<std::array<char, 3>, 3>& board,Player const& player
         for (int i = 0; i < 3; i++) {
             if (board[i][2 - i] == player1.symbol)
                 count_symbol++;
-            else if (empty_case(board, i, 2 - i)) {
+            else if (empty_case(board, i, 2 - i, player1, player2)) {
                 count_empty++;
                 empty_i = i;
             }
@@ -187,14 +189,14 @@ bool move_IA_best(std::array<std::array<char, 3>, 3>& board,Player const& player
 void move (std::array<std::array<char, 3>, 3>  & board , Player const& player1, Player const& player2, int const& choice){
 
     if (player1.name=="IA" && choice==2){
-        //if(!move_IA_best(board, player1, player1)){
-            //if(!move_IA_best(board, player2, player1)){
-                move_IA(board, player1);
-           // }
+        if(!move_IA_best(board, player1, player1)){
+            if(!move_IA_best(board, player2, player1)){
+                move_IA(board, player1, player2);
+            }
         }
-   // }
+    }
     else {
-        move_player(board, player1);
+        move_player(board, player1, player2);
         
     }
 
