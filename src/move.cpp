@@ -1,6 +1,6 @@
 //#include <iostream>
 //#include <string>
-//#include <vector>
+#include <vector>
 #include <random>
 //#include <time.h>
 #include "move.hpp"
@@ -9,7 +9,7 @@
 
 
 
-bool empty_case(std::array<std::array<char, 3>, 3> board , int i, int j){
+bool empty_case(std::array<std::array<char, 3>, 3>& board , int i, int j){
     bool empty;
     if(board[i][j]!='X' && board[i][j] !='O'){
         empty=true;
@@ -21,6 +21,19 @@ return empty;
 
 }
 
+std::vector <int> empty_tab( std::array<std::array<char, 3>, 3> board ){
+    std::vector <int> empty{};
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if(empty_case(board,i,j)){
+                empty.push_back(i*3+j+1);
+            };
+    }
+}
+    return empty;
+    }
+
+
 
 
 void move_player(std::array<std::array<char, 3>, 3>  & board , Player const& player){
@@ -30,7 +43,7 @@ void move_player(std::array<std::array<char, 3>, 3>  & board , Player const& pla
         std::cin>>case_choice;
         case_choice--;
         
-    while (!empty_case(board, (case_choice)/3, case_choice%3))
+    while (!empty_case(board, (case_choice)/3, (case_choice%3)))
     {
         std::cout<<player.name<<" Case indisponible. Choisis-en une autre.  "<<std::endl;
         std::cin>>case_choice;
@@ -43,15 +56,13 @@ void move_player(std::array<std::array<char, 3>, 3>  & board , Player const& pla
 }
 
 void move_IA(std::array<std::array<char, 3>, 3>  & board , Player const& player){
-    int i{};
-    int j{};
-    do
-    {
-        i = rand()%3;
-        j = rand()%3;
-    } while (!empty_case(board,i,j));
+    std::vector<int> tab = empty_tab(board);
+    int n = rand()%tab.size();
+    int pos = tab[n];
+    int i = (pos-1)/3;
+    int j= (pos-1)%3;
     board[i][j]=player.symbol;
-    std::cout<<"l'IA a joué sur la case "<<(i*3+j+1)<<std::endl;
+    std::cout<<"l'IA a joué sur la case "<<pos<<std::endl;
     draw_game_board(board);
 }
 
@@ -59,16 +70,15 @@ bool same_symbol(std::array<std::array<char, 3>, 3> const& board, Player const& 
  {
     // Vérifie les lignes et colonnes
     for (int j = 0; j < 3; j++) {
-        if ((board[0][j] == player.symbol && board[1][j] == player.symbol || board[2][j] == player.symbol && board[1][j] == player.symbol) ||  // colonne j
-            (board[j][0] == player.symbol || board[j][1] == player.symbol || board[j][2] == player.symbol)) {   // ligne j
-            //std::cout << "C'est gagné pour " << player.name << std::endl;
+        if ((board[0][j] == player.symbol && board[1][j] == player.symbol || board[2][j] == player.symbol && board[1][j] == player.symbol || board[2][j] == player.symbol && board[0][j]) ||  // colonne j
+            (board[j][0] == player.symbol && board[j][1] == player.symbol || board[j][2] == player.symbol && board[j][1] == player.symbol || board[j][2] == player.symbol && board[j][0])) {   // ligne j
             return true;
         }
     }
 
     // Vérifie les diagonales
-    if ((board[0][0] == player.symbol || board[1][1] == player.symbol || board[2][2] == player.symbol) ||  // diagonale principale
-        (board[0][2] == player.symbol || board[1][1] == player.symbol || board[2][0] == player.symbol)) {  // diagonale secondaire
+    if ((board[0][0] == player.symbol && board[1][1] == player.symbol || board[2][2] == player.symbol && board[1][1] == player.symbol || board[2][2] == player.symbol && board[0][0] == player.symbol ) ||  // diagonale principale
+        (board[0][2] == player.symbol && board[1][1] == player.symbol || board[2][0] == player.symbol && board[1][1] == player.symbol || board[2][0] == player.symbol && board[0][2] == player.symbol )) {  // diagonale secondaire
         //std::cout << "C'est gagné pour " << player.name << std::endl;
         return true;
     }
@@ -76,9 +86,7 @@ bool same_symbol(std::array<std::array<char, 3>, 3> const& board, Player const& 
     return false;
 }
 
-bool move_IA_best(std::array<std::array<char, 3>, 3>& board,
-                  Player const& player1,  // symbole à analyser (IA ou adversaire)
-                  Player const& player2)  // celui qui joue (l’IA)
+bool move_IA_best(std::array<std::array<char, 3>, 3>& board,Player const& player1, Player const& player2)
 {
     // --- Vérifie toutes les lignes ---
     for (int x = 0; x < 3; x++) {
@@ -89,7 +97,7 @@ bool move_IA_best(std::array<std::array<char, 3>, 3>& board,
         for (int y = 0; y < 3; y++) {
             if (board[x][y] == player1.symbol)
                 count_symbol++;
-            else if (board[x][y] == '.') {
+            else if (empty_case(board, x, y)) {
                 count_empty++;
                 empty_y = y;
             }
@@ -112,7 +120,7 @@ bool move_IA_best(std::array<std::array<char, 3>, 3>& board,
         for (int x = 0; x < 3; x++) {
             if (board[x][y] == player1.symbol)
                 count_symbol++;
-            else if (board[x][y] == '.') {
+            else if (empty_case(board, x, y)) {
                 count_empty++;
                 empty_x = x;
             }
@@ -134,7 +142,7 @@ bool move_IA_best(std::array<std::array<char, 3>, 3>& board,
         for (int i = 0; i < 3; i++) {
             if (board[i][i] == player1.symbol)
                 count_symbol++;
-            else if (board[i][i] == '.') {
+            else if (empty_case(board, i, i)) {
                 count_empty++;
                 empty_i = i;
             }
@@ -156,7 +164,7 @@ bool move_IA_best(std::array<std::array<char, 3>, 3>& board,
         for (int i = 0; i < 3; i++) {
             if (board[i][2 - i] == player1.symbol)
                 count_symbol++;
-            else if (board[i][2 - i] == '.') {
+            else if (empty_case(board, i, 2 - i)) {
                 count_empty++;
                 empty_i = i;
             }
@@ -170,20 +178,21 @@ bool move_IA_best(std::array<std::array<char, 3>, 3>& board,
         }
     }
 
-    // Aucun coup gagnant ni bloquant trouvé
+   
     return false;
 }
+
 
 
 void move (std::array<std::array<char, 3>, 3>  & board , Player const& player1, Player const& player2, int const& choice){
 
     if (player1.name=="IA" && choice==2){
-        if(!move_IA_best(board, player1, player1)){
-            if(!move_IA_best(board, player2, player1)){
+        //if(!move_IA_best(board, player1, player1)){
+            //if(!move_IA_best(board, player2, player1)){
                 move_IA(board, player1);
-            }
+           // }
         }
-    }
+   // }
     else {
         move_player(board, player1);
         
