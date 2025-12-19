@@ -9,9 +9,9 @@ struct Player{
 };
 
 
-
+int mode_choice();
 Player create_player();
-Player mode_choice(int const& choice);
+Player create_player2(int const& choice);
 char player2_symbol(Player const& player1);
 
 
