@@ -1,6 +1,4 @@
-//#include <iostream>
 #include <string>
-//#include <array>
 #pragma once
 
 struct Player{

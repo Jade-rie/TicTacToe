@@ -1,9 +1,5 @@
 #include <iostream>
-#include <string>
-#include <vector>
-#include <random>
-#include <time.h>
-#include "move.hpp"
+#include <array>
 #include "draw_game.hpp"
 
 

@@ -1,8 +1,6 @@
-//#include <iostream>
-//#include <string>
+#include <array>
 #include <vector>
 #include "Player.hpp"
-#include "game.hpp"
 #pragma once
 
 bool empty_case(std::array<std::array<char, 3>, 3>& board , int i, int j);
