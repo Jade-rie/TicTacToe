@@ -91,29 +91,6 @@ void move_IA(std::array<std::array<char, 3>, 3>  & board , Player const& player)
     draw_game_board(board);
 }
 
-bool same_symbol(std::array<std::array<char, 3>, 3> const& board, Player const& player)
-{
-    // Vérifie les lignes et colonnes
-    for (int j = 0; j < 3; j++) 
-    {
-        if ((board[0][j] == player.symbol && board[1][j] == player.symbol || board[2][j] == player.symbol && board[1][j] == player.symbol || board[2][j] == player.symbol && board[0][j]) ||    // colonne j
-            (board[j][0] == player.symbol && board[j][1] == player.symbol || board[j][2] == player.symbol && board[j][1] == player.symbol || board[j][2] == player.symbol && board[j][0]))      // ligne j
-        {   
-            return true;
-        }
-    }
-
-    // Vérifie les diagonales
-    if ((board[0][0] == player.symbol && board[1][1] == player.symbol || board[2][2] == player.symbol && board[1][1] == player.symbol || board[2][2] == player.symbol && board[0][0] == player.symbol ) ||  
-        (board[0][2] == player.symbol && board[1][1] == player.symbol || board[2][0] == player.symbol && board[1][1] == player.symbol || board[2][0] == player.symbol && board[0][2] == player.symbol )) 
-    { 
-       
-        return true;
-    }
-
-    return false;
-}
-
 bool move_IA_best(std::array<std::array<char, 3>, 3>& board,Player const& player1, Player const& player2)
 {
     // --- Vérifie toutes les lignes ---
@@ -204,6 +181,10 @@ bool move_IA_best(std::array<std::array<char, 3>, 3>& board,Player const& player
     
 
     // --- Diagonale secondaire ---
+
+    count_symbol = 0;
+    count_empty= 0;
+    empty_i = -1;
 
     for (int i = 0; i < 3; i++) 
     {
