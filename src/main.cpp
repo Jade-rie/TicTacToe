@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Player.hpp"
+#include "player.hpp"
 #include "draw_game.hpp"
 #include "move.hpp"
 #include "game.hpp"
@@ -27,10 +27,9 @@ int main()
         {'7','8','9'},
     }};
 
-std::cout<<"aide : "<<std::endl;
-draw_game_board(board_number);
-
-game(board, player1, player2, choice);
+    std::cout<<"aide : "<<std::endl;
+    draw_game_board(board_number);
+    game(board, player1, player2, choice);
 
     return 0;
 }
